@@ -1,2 +1,2 @@
 # url-shortener
- URL shortener using AWS Chalice
+ A simple URL shortener app using AWS Chalice.
