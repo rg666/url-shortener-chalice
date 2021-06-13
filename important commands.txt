@@ -1,0 +1,10 @@
+python -m venv env
+env\Scripts\activate.bat
+chalice new-project url-shortner
+pip install awscli chalice boto3
+pip freeze > requirements.txt
+aws cloudformation deploy --template-file .chalice\dynamodb_cf_template.yaml --stack-name "url-shortner-stack"
+chalice local
+chalice deploy
+chalice delete
+aws cloudformation delete-stack --stack-name "url-shortner-stack"

@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  urlShortener:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: url-shortener-table
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S" 
+        - AttributeName: "originalurl"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"  
+        - AttributeName: "originalurl"
+          KeyType: "RANGE"
+
+      ProvisionedThroughput:
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+
+Outputs:
+  TableName:
+    Value: !Ref "urlShortener"
+    Description: Table for the url shortener app.
