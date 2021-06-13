@@ -13,6 +13,9 @@ Dependencies are included in the file:
 requirements.txt
 ``` 
 
+Please note the below chalice scheduler is configured to clean up the dynamo-db table entries every 24 hours.
+![alt text](https://github.com/rg666/url-shortener-chalice/blob/main/images/periodic-db-clean-up.png?raw=true)
+
 ## Deployment steps:
 ```sh
 aws cloudformation deploy --template-file .chalice\dynamodb_cf_template.yaml --stack-name "url-shortner-stack"
@@ -22,9 +25,9 @@ chalice deploy
 ```
 
 ## Testing steps screenshots:
-![alt text](https://github.com/rg666/url-shortener-chalice/blob/main/tests/shorten-url.png?raw=true)
-![alt text](https://github.com/rg666/url-shortener-chalice/blob/main/tests/use_short_url_2.png?raw=true)
-![alt text](https://github.com/rg666/url-shortener-chalice/blob/main/tests/use_short_url_1.png?raw=true)
+![alt text](https://github.com/rg666/url-shortener-chalice/blob/main/images/shorten-url.png?raw=true)
+![alt text](https://github.com/rg666/url-shortener-chalice/blob/main/images/use_short_url_2.png?raw=true)
+![alt text](https://github.com/rg666/url-shortener-chalice/blob/main/images/use_short_url_1.png?raw=true)
 ## Teardown steps:
 ```sh
 chalice delete
