@@ -1,4 +1,4 @@
-from chalice import Chalice, Response, Rate
+from chalice import Chalice, Response, Rate, NotFoundError
 from boto3.dynamodb.conditions import Key
 import boto3
 import string
@@ -71,8 +71,8 @@ def generate_shortened_url():
             'originalurl': data['original-url']
         })
         base_url = get_base_url(app.current_request)
-        short_url = base_url+'/'+id
-        return {'message': 'O.K.', 'short url': short_url}
+        short_url = 'https://'+base_url+'/'+id
+        return {'short url': short_url}
     except Exception as e:
         return Response(body=str(e),
                     headers={'Content-Type': 'text/plain'},
@@ -81,18 +81,22 @@ def generate_shortened_url():
 
 @app.route('/{id}', methods=['GET'])
 def redirect(id):
-    response = get_dynamo_db_table().query(
-        KeyConditionExpression=Key("id").eq(id)
-    )
-    data = response.get('Items', None)
+    try:
+        response = get_dynamo_db_table().query(
+            KeyConditionExpression=Key("id").eq(id)
+        )
+        data = response.get('Items', None)
+    except Exception as e:
+        raise NotFoundError(id)    
     redirect_url = data[0]['originalurl']
-    return redirect_url
-    # return redirect(redirect_url)
+    return Response(status_code=301,
+                    headers={'Location': redirect_url},
+                    body='')
 
 @app.schedule(Rate(24, unit=Rate.HOURS))
-def periodic_task(event):
+def periodic_db_clean_up(event):
     '''
-    Automatically clean up the db table every 24 Hours.
+    Automatically clean up the dynamo db table every 24 Hours.
     '''
     table = get_dynamo_db_table()
     truncate_table(table)
